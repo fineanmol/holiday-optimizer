@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Holiday Optimizer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+            align-items: start;
+        }
+
+        .form-section {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .output-section {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 180px);
+            min-height: 600px;
+        }
+
+        .form-section h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #2563eb;
+            font-size: 20px;
+        }
+
+        .form-section .subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .radio-option input[type="radio"] {
+            margin: 0;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        button:active {
+            background-color: #1e40af;
+        }
+
+        .info-box {
+            background-color: #eff6ff;
+            border: 1px solid #93c5fd;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+
+        .info-box a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .info-box a:hover {
+            text-decoration: underline;
+        }
+
+        pre {
+            background: #f9fafb;
+            padding: 16px;
+            white-space: pre-wrap;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            flex: 1;
+            overflow-y: auto;
+            margin: 0;
+        }
+
+        .output-section h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #2563eb;
+            font-size: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .output-section {
+                height: auto;
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Holiday Optimizer</h1>
+    <p class="subtitle">Optimize your vacation days to maximize time off by strategically placing breaks around weekends
+        and holidays.</p>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Optimization Settings</h2>
+            <p class="subtitle">Configure your vacation parameters to find the best break schedule.</p>
+
+            <form id="optimizerForm">
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country">
+                        <!-- Options populated dynamically -->
+                    </select>
+                    <div class="help-text">Select your country to load public holidays</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <input type="number" id="year" name="year" value="2026" min="2020" max="2100" required>
+                    <div class="help-text">The year to optimize vacation days for</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" name="startDate" required>
+                    <div class="help-text">Optimization will start from this date (defaults to today if same year)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="numberOfDays">Total Paid Leave Days</label>
+                    <input type="number" id="numberOfDays" name="numberOfDays" value="10" min="1" max="365" required>
+                    <div class="help-text">Total number of paid leave days available</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="minBreak">Minimum Break Length</label>
+                    <input type="number" id="minBreak" name="minBreak" value="4" min="1" max="30" required>
+                    <div class="help-text">Minimum number of days for a vacation break</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="maxBreak">Maximum Break Length</label>
+                    <input type="number" id="maxBreak" name="maxBreak" value="9" min="1" max="30" required>
+                    <div class="help-text">Maximum number of days for a vacation break</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="timeBetweenBreaks">Time Between Breaks (days)</label>
+                    <input type="number" id="timeBetweenBreaks" name="timeBetweenBreaks" value="21" min="0" max="365"
+                        required>
+                    <div class="help-text">Minimum days between vacation breaks (3 weeks = 21 days)</div>
+                </div>
+
+                <button type="submit">Calculate Optimal Schedule</button>
+
+                <div class="info-box">
+                    <strong>💡 Tip:</strong> Weekends and public holidays don't count toward your paid leave. The
+                    optimizer
+                    will strategically place breaks to maximize your total days off!
+                </div>
+            </form>
+        </div>
+
+        <div class="output-section">
+            <h2>Optimization Results</h2>
+            <pre id="output">Ready. Configure your settings and click "Calculate Optimal Schedule" to see results.</pre>
+        </div>
+    </div>
+
+    <script type="module">
+        import { optimize, formatReport } from "./vacation_optimizer.js";
+        import { getPreset, getCountryList } from "./country-presets.js";
+
+        // Populate country dropdown dynamically
+        const countrySelect = document.getElementById("country");
+        const countries = getCountryList();
+
+        countries.forEach(({ key, name }) => {
+            const option = document.createElement("option");
+            option.value = key;
+            option.textContent = name;
+            countrySelect.appendChild(option);
+        });
+
+        // Set default start date to today
+        const today = new Date();
+        document.getElementById("startDate").value = today.toISOString().split('T')[0];
+
+        // Load country preset when country changes
+        countrySelect.addEventListener("change", (e) => {
+            const countryKey = e.target.value;
+            try {
+                const year = parseInt(document.getElementById("year").value);
+                const preset = getPreset(countryKey, null, year);
+                document.getElementById("numberOfDays").value = preset.numberOfDays;
+            } catch (err) {
+                console.error("Error loading preset:", err);
+                document.getElementById("output").textContent = `Error loading preset: ${err.message}`;
+            }
+        });
+
+        // Also update holidays when year changes
+        document.getElementById("year").addEventListener("change", () => {
+            countrySelect.dispatchEvent(new Event("change"));
+        });
+
+        // Load initial preset
+        countrySelect.dispatchEvent(new Event("change"));
+
+        // Handle form submission
+        document.getElementById("optimizerForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const countryKey = formData.get("country");
+
+            try {
+                const year = parseInt(formData.get("year"));
+                const customPTO = parseInt(formData.get("numberOfDays"));
+
+                // Get country holidays for the specified year
+                const preset = getPreset(countryKey, customPTO, year);
+
+                // Build params object
+                const params = {
+                    numberOfDays: customPTO,
+                    year: year,
+                    startDate: formData.get("startDate"),
+                    minBreak: parseInt(formData.get("minBreak")),
+                    maxBreak: parseInt(formData.get("maxBreak")),
+                    timeBetweenBreaks: parseInt(formData.get("timeBetweenBreaks")),
+                    holidays: preset.holidays,
+                    companyDaysOff: []
+                };
+
+                // Run optimizer
+                const result = optimize(params);
+                const report = formatReport(result, params);
+
+                document.getElementById("output").textContent = report;
+            } catch (error) {
+                document.getElementById("output").textContent = `Error: ${String(error)}\n\nStack: ${error.stack}`;
+            }
+        });
+    </script>
+</body>
+
+</html>
