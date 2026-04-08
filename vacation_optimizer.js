@@ -78,12 +78,6 @@ function addDays(d, n) {
   return copy;
 }
 
-function compareISO(a, b) {
-  if (a < b) return -1;
-  if (a > b) return 1;
-  return 0;
-}
-
 function isFixedOff(day) {
   return day.is_weekend || day.is_public_holiday || day.is_company_day;
 }
@@ -408,10 +402,6 @@ function formatReport(res, params) {
           `Weekends ${br.weekends} | Public ${br.public_holidays}${companyPart}`
       );
 
-      const ptoDates = br.days.filter((d) => d.is_pto).map((d) => d.date);
-      if (ptoDates.length) {
-        lines.push(`  • Paid leave dates: ${ptoDates.join(", ")}`);
-      }
       lines.push("");
     });
   }

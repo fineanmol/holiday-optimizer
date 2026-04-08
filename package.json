@@ -1,0 +1,42 @@
+{
+  "name": "@fineanmol/holiday-optimizer",
+  "version": "1.0.1",
+  "description": "Optimize vacation days using dynamic programming — maximize time off around weekends and public holidays.",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "vacation_optimizer.js",
+    "country-presets.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "vacation",
+    "pto",
+    "holiday",
+    "optimizer",
+    "planning",
+    "calendar",
+    "leave"
+  ],
+  "author": "fineanmol",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fineanmol/holiday-optimizer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fineanmol/holiday-optimizer/issues"
+  },
+  "homepage": "https://github.com/fineanmol/holiday-optimizer#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@fineanmol/public-holidays": "^1.0.1"
+  }
+}
