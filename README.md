@@ -4,6 +4,22 @@ Optimize your vacation days using Dynamic Programming! Maximize your total days 
 
 **Live Demo:** [Try it here](https://fineanmol.github.io/holiday-optimizer/)
 
+## Install (npm)
+
+```bash
+npm install @fineanmol/holiday-optimizer
+```
+
+```javascript
+import { optimize, formatReport, getPreset } from "@fineanmol/holiday-optimizer";
+
+const params = getPreset("germany");
+const result = optimize(params);
+console.log(formatReport(result, params));
+```
+
+**Related:** [`@fineanmol/public-holidays`](https://www.npmjs.com/package/@fineanmol/public-holidays) — zero-dependency holiday lookups (`isHoliday`, `nextHoliday`, etc.) with the same regional data, usable without the optimizer.
+
 ## What It Does
 
 This tool helps you plan your vacations optimally. Given:

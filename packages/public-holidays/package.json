@@ -1,0 +1,46 @@
+{
+  "name": "@fineanmol/public-holidays",
+  "version": "1.0.0",
+  "description": "Zero-dependency public holiday lookups (Germany Berlin, India, …) with versioned yearly data.",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src/index.js",
+    "src/index.d.ts",
+    "src/data.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "holidays",
+    "public-holidays",
+    "calendar",
+    "india",
+    "germany",
+    "berlin",
+    "bank-holiday",
+    "pto"
+  ],
+  "author": "fineanmol",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fineanmol/holiday-optimizer.git",
+    "directory": "packages/public-holidays"
+  },
+  "bugs": {
+    "url": "https://github.com/fineanmol/holiday-optimizer/issues"
+  },
+  "homepage": "https://github.com/fineanmol/holiday-optimizer/tree/main/packages/public-holidays#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
