@@ -1,6 +1,6 @@
 {
   "name": "@fineanmol/holiday-optimizer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Optimize vacation days using dynamic programming — maximize time off around weekends and public holidays.",
   "type": "module",
   "main": "./index.js",
