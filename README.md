@@ -108,4 +108,4 @@ MIT License - feel free to use and modify!
 
 ---
 
-**Take your days off. You earned them.**
+**Made with ❤️ to help you maximize your vacation time!**
