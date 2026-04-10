@@ -161,7 +161,7 @@ jobs:
         if: steps.bump.outputs.skip != 'true'
         run: |
           git -C ../.. add packages/public-holidays/package.json
-          git -C ../.. pull --rebase origin main   # pick up any optimizer commit
           git -C ../.. commit -m "chore(release): public-holidays ${{ steps.version.outputs.new_version }} [skip ci]"
           git -C ../.. tag "public-holidays/${{ steps.version.outputs.new_version }}"
+          git -C ../.. pull --rebase origin main   # pick up any optimizer commit
           git -C ../.. push origin main --follow-tags
