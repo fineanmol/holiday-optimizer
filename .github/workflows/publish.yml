@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
 
+    permissions:
+      contents: write
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,9 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Authenticate with npm
-        run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Configure git
         run: |
@@ -70,7 +72,9 @@ jobs:
 
       - name: Publish to npm
         if: steps.bump.outputs.skip != 'true'
-        run: npm publish --access public
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Commit, tag, and push
         if: steps.bump.outputs.skip != 'true'
@@ -87,6 +91,10 @@ jobs:
     # Run after optimizer so both don't push at the same moment
     needs: release-optimizer
 
+    permissions:
+      contents: write
+      id-token: write
+
     defaults:
       run:
         working-directory: packages/public-holidays
@@ -99,9 +107,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Authenticate with npm
-        run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Configure git
         run: |
@@ -147,7 +153,9 @@ jobs:
 
       - name: Publish to npm
         if: steps.bump.outputs.skip != 'true'
-        run: npm publish --access public
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Commit, tag, and push
         if: steps.bump.outputs.skip != 'true'
