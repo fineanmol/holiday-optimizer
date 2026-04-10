@@ -1,8 +1,8 @@
 # @fineanmol/public-holidays
 
-Small, **zero-runtime-dependency** lookups for **public holidays** bundled as versioned data. Use it in Node or any bundler that supports ES modules.
+Public holiday lookups for Germany (Berlin) and India, with no runtime dependencies. Works in Node and any bundler that handles ES modules.
 
-**Pairs well with** [`@fineanmol/holiday-optimizer`](https://www.npmjs.com/package/@fineanmol/holiday-optimizer) for PTO planning.
+Also pairs with [`@fineanmol/holiday-optimizer`](https://www.npmjs.com/package/@fineanmol/holiday-optimizer) if you want the full PTO planning tool.
 
 ## Install
 
@@ -33,13 +33,13 @@ import {
 } from "@fineanmol/public-holidays";
 ```
 
-- **`listRegions()`** — `{ id, name }[]`
-- **`holidaysInYear(regionId, year)`** — `{ date: 'YYYY-MM-DD', name }[]`
-- **`isHoliday(date, regionId)`** — `boolean` (`date`: `Date` or ISO `YYYY-MM-DD`)
-- **`holidayOn(date, regionId)`** — holiday object or `null`
-- **`nextHoliday(fromDate, regionId)`** — first holiday **on or after** `fromDate`, or `null`
-- **`previousHoliday(fromDate, regionId)`** — last holiday **on or before** `fromDate`, or `null`
-- **`toISODate(date)`** — normalize to `YYYY-MM-DD` (local calendar day for `Date`)
+- **`listRegions()`** — returns `{ id, name }[]` for all supported regions
+- **`holidaysInYear(regionId, year)`** — all holidays for that region/year as `{ date, name }[]`
+- **`isHoliday(date, regionId)`** — `true`/`false`; `date` can be a `Date` or `'YYYY-MM-DD'` string
+- **`holidayOn(date, regionId)`** — the holiday object if that day is one, otherwise `null`
+- **`nextHoliday(fromDate, regionId)`** — next holiday on or after that date
+- **`previousHoliday(fromDate, regionId)`** — last holiday on or before that date
+- **`toISODate(date)`** — converts a `Date` to `'YYYY-MM-DD'` using the local calendar day
 
 ## Example
 
@@ -56,9 +56,9 @@ nextHoliday("2026-10-02", "germany-berlin");
 // → { date: '2026-10-03', name: 'Tag der Deutschen Einheit' }
 ```
 
-## Disclaimer
+## Note
 
-Holiday rules change. This package is for **apps and planning**, not legal or payroll advice. Verify official sources for compliance.
+Holiday rules change year to year. This is good for apps and scheduling — don't rely on it for payroll or compliance without checking official sources.
 
 ## License
 

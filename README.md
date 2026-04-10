@@ -18,7 +18,7 @@ const result = optimize(params);
 console.log(formatReport(result, params));
 ```
 
-**Related:** [`@fineanmol/public-holidays`](https://www.npmjs.com/package/@fineanmol/public-holidays) — zero-dependency holiday lookups (`isHoliday`, `nextHoliday`, etc.) with the same regional data, usable without the optimizer.
+**Related:** [`@fineanmol/public-holidays`](https://www.npmjs.com/package/@fineanmol/public-holidays) — standalone holiday lookups (`isHoliday`, `nextHoliday`, etc.) with the same regional data, usable on its own without the optimizer.
 
 ## What It Does
 
@@ -32,11 +32,11 @@ It finds the best schedule that maximizes your total days off by leveraging week
 
 ## Features
 
-- 🎯 **Dynamic Programming Algorithm** - Finds optimal vacation schedule
-- 🌍 **Multi-Country Support** - Pre-configured holidays for Germany and India (easily extensible)
-- ⚙️ **Customizable Constraints** - Set your own min/max break lengths and spacing
-- 📊 **Detailed Reports** - See exactly which dates to take off and how many days you'll get
-- 💻 **Zero Server Cost** - Runs entirely in the browser using GitHub Pages
+- Dynamic programming to find the best possible schedule (not greedy, actually optimal)
+- Germany and India holiday presets out of the box, easy to add more
+- Control over min/max break length and minimum spacing between breaks
+- Detailed output showing every date and how many total days off you get
+- Runs fully in the browser — no server needed
 
 ## How It Works
 
@@ -108,4 +108,4 @@ MIT License - feel free to use and modify!
 
 ---
 
-**Made with ❤️ to help you maximize your vacation time!**
+**Take your days off. You earned them.**
