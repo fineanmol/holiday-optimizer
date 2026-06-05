@@ -37,6 +37,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@fineanmol/public-holidays": "^1.0.1"
+    "@fineanmol/public-holidays": "^1.0.6"
   }
 }
