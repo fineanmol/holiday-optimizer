@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Smoke test holiday-optimizer
+        run: node --input-type=module -e "import('./index.js').then(m => { if (!m) throw new Error('empty module'); console.log('holiday-optimizer OK'); })"
+
+      - name: Smoke test public-holidays
+        working-directory: packages/public-holidays
+        run: node --input-type=module -e "import('./src/index.js').then(m => { if (!m) throw new Error('empty module'); console.log('public-holidays OK'); })"
