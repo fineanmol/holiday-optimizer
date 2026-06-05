@@ -3,12 +3,39 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'chore(release):')
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Smoke test holiday-optimizer
+        run: node --input-type=module -e "import('./index.js').then(() => console.log('holiday-optimizer OK'))"
+
+      - name: Smoke test public-holidays
+        working-directory: packages/public-holidays
+        run: node --input-type=module -e "import('./src/index.js').then(() => console.log('public-holidays OK'))"
+
   # ── @fineanmol/holiday-optimizer (root package) ──────────────────────────
   release-optimizer:
     runs-on: ubuntu-latest
-    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
+    needs: validate
+    if: github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'chore(release):')
 
     permissions:
       contents: write
@@ -21,8 +48,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Configure git
         run: |
@@ -52,13 +81,12 @@ jobs:
             BUMP="minor"
           fi
 
-          # Nothing relevant changed — skip
           if [ -z "$(echo "$COMMITS" | tr -d '[:space:]')" ]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "skip=true" >> "$GITHUB_OUTPUT"
             echo "No commits for this package — skipping"
           else
-            echo "skip=false" >> $GITHUB_OUTPUT
-            echo "bump=$BUMP" >> $GITHUB_OUTPUT
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "bump=$BUMP" >> "$GITHUB_OUTPUT"
             echo "Version bump: $BUMP"
           fi
 
@@ -66,13 +94,22 @@ jobs:
         id: version
         if: steps.bump.outputs.skip != 'true'
         run: |
-          NEW_VER=$(npm version ${{ steps.bump.outputs.bump }} --no-git-tag-version)
-          echo "new_version=${NEW_VER}" >> $GITHUB_OUTPUT
+          NEW_VER=$(npm version "${{ steps.bump.outputs.bump }}" --no-git-tag-version)
+          echo "new_version=${NEW_VER}" >> "$GITHUB_OUTPUT"
           echo "New version: $NEW_VER"
+
+      - name: Verify npm authentication
+        if: steps.bump.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          echo "Authenticated as: $(npm whoami)"
+          npm view "@fineanmol/holiday-optimizer" version || echo "First publish"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to npm
         if: steps.bump.outputs.skip != 'true'
-        run: npm publish --access public
+        run: npm publish --access public --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -87,9 +124,8 @@ jobs:
   # ── @fineanmol/public-holidays (packages/public-holidays) ────────────────
   release-public-holidays:
     runs-on: ubuntu-latest
-    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
-    # Run after optimizer so both don't push at the same moment
     needs: release-optimizer
+    if: github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'chore(release):')
 
     permissions:
       contents: write
@@ -106,8 +142,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Configure git
         run: |
@@ -135,11 +173,11 @@ jobs:
           fi
 
           if [ -z "$(echo "$COMMITS" | tr -d '[:space:]')" ]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "skip=true" >> "$GITHUB_OUTPUT"
             echo "No commits for this package — skipping"
           else
-            echo "skip=false" >> $GITHUB_OUTPUT
-            echo "bump=$BUMP" >> $GITHUB_OUTPUT
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "bump=$BUMP" >> "$GITHUB_OUTPUT"
             echo "Version bump: $BUMP"
           fi
 
@@ -147,13 +185,22 @@ jobs:
         id: version
         if: steps.bump.outputs.skip != 'true'
         run: |
-          NEW_VER=$(npm version ${{ steps.bump.outputs.bump }} --no-git-tag-version)
-          echo "new_version=${NEW_VER}" >> $GITHUB_OUTPUT
+          NEW_VER=$(npm version "${{ steps.bump.outputs.bump }}" --no-git-tag-version)
+          echo "new_version=${NEW_VER}" >> "$GITHUB_OUTPUT"
           echo "New version: $NEW_VER"
+
+      - name: Verify npm authentication
+        if: steps.bump.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          echo "Authenticated as: $(npm whoami)"
+          npm view "@fineanmol/public-holidays" version || echo "First publish"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to npm
         if: steps.bump.outputs.skip != 'true'
-        run: npm publish --access public
+        run: npm publish --access public --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -163,5 +210,5 @@ jobs:
           git -C ../.. add packages/public-holidays/package.json
           git -C ../.. commit -m "chore(release): public-holidays ${{ steps.version.outputs.new_version }} [skip ci]"
           git -C ../.. tag "public-holidays/${{ steps.version.outputs.new_version }}"
-          git -C ../.. pull --rebase origin main   # pick up any optimizer commit
+          git -C ../.. pull --rebase origin main
           git -C ../.. push origin main --follow-tags
