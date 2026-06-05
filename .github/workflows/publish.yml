@@ -101,7 +101,8 @@ jobs:
         if: steps.bump.outputs.skip != 'true'
         run: |
           set -euo pipefail
-          echo "Authenticated as: $(npm whoami)"
+          NPM_USER="$(npm whoami)"
+          echo "Authenticated as: ${NPM_USER}"
           npm view "@fineanmol/holiday-optimizer" version || echo "First publish"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -192,7 +193,8 @@ jobs:
         if: steps.bump.outputs.skip != 'true'
         run: |
           set -euo pipefail
-          echo "Authenticated as: $(npm whoami)"
+          NPM_USER="$(npm whoami)"
+          echo "Authenticated as: ${NPM_USER}"
           npm view "@fineanmol/public-holidays" version || echo "First publish"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
