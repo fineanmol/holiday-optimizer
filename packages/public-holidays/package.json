@@ -1,6 +1,6 @@
 {
   "name": "@fineanmol/public-holidays",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Zero-dependency public holiday lookups (Germany Berlin, India, …) with versioned yearly data.",
   "type": "module",
   "main": "./src/index.js",
