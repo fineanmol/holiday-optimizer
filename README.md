@@ -1,5 +1,9 @@
 # Holiday Optimizer 🏖️
 
+[![npm version](https://img.shields.io/npm/v/@fineanmol/holiday-optimizer.svg)](https://www.npmjs.com/package/@fineanmol/holiday-optimizer)
+[![npm downloads](https://img.shields.io/npm/dm/@fineanmol/holiday-optimizer.svg)](https://www.npmjs.com/package/@fineanmol/holiday-optimizer)
+[![npm license](https://img.shields.io/npm/l/@fineanmol/holiday-optimizer.svg)](https://www.npmjs.com/package/@fineanmol/holiday-optimizer)
+
 Optimize your vacation days using Dynamic Programming! Maximize your total days off by strategically placing breaks around weekends and public holidays.
 
 **Live Demo:** [Try it here](https://fineanmol.github.io/holiday-optimizer/)
